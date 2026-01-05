@@ -11,7 +11,7 @@ elif torch.cuda.is_available():
     DEVICE = torch.device("cuda")
 else:
     DEVICE = torch.device("cpu")
-# print("→ running on", DEVICE)
+print("→ running on", DEVICE)
 
 # import torch
 import torch.nn as nn
@@ -287,7 +287,7 @@ learnrate=0.001
 t0 = time.time()
 
 # number of epochs
-for j in range(0,200):
+for j in range(0,5):
       # if j >20:
       #     learnratete=0.001
       # elif j>10:
