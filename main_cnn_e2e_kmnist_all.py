@@ -1,10 +1,17 @@
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+# Leave CUDA_VISIBLE_DEVICES untouched if user sets it; on Mac (no CUDA) it is ignored
+# os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import torch
 # print("Inside script—cuda.is_available():", torch.cuda.is_available())
 # print("Inside script—device_count():   ", torch.cuda.device_count())
-DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-# print("→ running on", device)
+# Prefer Apple MPS, then CUDA, else CPU
+if torch.backends.mps.is_available():
+    DEVICE = torch.device("mps")
+elif torch.cuda.is_available():
+    DEVICE = torch.device("cuda")
+else:
+    DEVICE = torch.device("cpu")
+# print("→ running on", DEVICE)
 
 # import torch
 import torch.nn as nn

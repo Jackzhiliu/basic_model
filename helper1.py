@@ -7,8 +7,14 @@ import my_functionaladj as mf
 import os
 import torch.nn as nn
 np.set_printoptions(threshold=np.inf)
-os.environ["CUDA_VISIBLE_DEVICES"] = "3"
-DEVICE_ = ['cuda' if torch.cuda.is_available() else 'cpu']
+# Do not force a specific GPU; prefer MPS, then CUDA, else CPU
+# os.environ["CUDA_VISIBLE_DEVICES"] = "3"
+if torch.backends.mps.is_available():
+    DEVICE_ = ['mps']
+elif torch.cuda.is_available():
+    DEVICE_ = ['cuda']
+else:
+    DEVICE_ = ['cpu']
 print("→ running on (helper)", DEVICE_)
 # FOLDER = 'saved_models'
 # FOLDER_e2e = 'saved_models_e2e'

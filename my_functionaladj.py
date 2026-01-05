@@ -1,7 +1,8 @@
 import torch.nn.functional as f
 import torch
 
-# s1=0.5
+# default negative slope for leaky relu
+s1 = 0.5
 def my_identity(x):
     return x
 
@@ -29,7 +30,7 @@ def my_leaky_relu_dot(x,k):
     # y[y <= 0] = 0.01
     # y[y > 0] = 1
     one = torch.ones_like(y)
-    slope = torch.full(y.size(), k).cuda()
+    slope = torch.full_like(y, k, device=y.device)
     # print(k)
     y = torch.where(y > 0, one, slope)
     # print(y.type())
