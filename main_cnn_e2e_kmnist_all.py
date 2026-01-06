@@ -38,7 +38,8 @@ from torch.utils.data.sampler import SubsetRandomSampler
 from tqdm import tqdm #从tqdm库中导入tadm类
 
 # os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-BATCH_SIZE = 64
+# Use batch_size=1 to match per-sample update assumption
+BATCH_SIZE = 1
 FOLDER_e2e=mm.FOLDER_e2e
 if not os.path.exists(FOLDER_e2e):
     os.mkdir(FOLDER_e2e)
@@ -101,6 +102,11 @@ val_dataset = datasets.SVHN(root='./data', split='train', transform=transforms.C
     transforms.ToTensor(),
     # normalize,
 ]), download=True)
+# ↓↓↓ Fast debug: limit dataset size to speed up iterations
+SUBSET_TRAIN = 5000
+SUBSET_VAL = 1000
+train_set = torch.utils.data.Subset(train_set, range(0, min(SUBSET_TRAIN, len(train_set))))
+val_dataset = torch.utils.data.Subset(val_dataset, range(0, min(SUBSET_VAL, len(val_dataset))))
 # train_set = datasets.FashionMNIST(root='./data', train=True, transform=transforms.Compose([
 #     transforms.Resize(size=(32, 32)),
 #     transforms.RandomHorizontalFlip(),
