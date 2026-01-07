@@ -38,8 +38,8 @@ from torch.utils.data.sampler import SubsetRandomSampler
 from tqdm import tqdm #从tqdm库中导入tadm类
 
 # os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-# Use batch_size=1 to match per-sample update assumption
-BATCH_SIZE = 1
+# Use a small batch_size; per-sample update still enforced inside helper
+BATCH_SIZE = 8
 FOLDER_e2e=mm.FOLDER_e2e
 if not os.path.exists(FOLDER_e2e):
     os.mkdir(FOLDER_e2e)
