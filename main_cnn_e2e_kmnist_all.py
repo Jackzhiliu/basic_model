@@ -43,6 +43,7 @@ BATCH_SIZE = 1
 FOLDER_e2e=mm.FOLDER_e2e
 if not os.path.exists(FOLDER_e2e):
     os.mkdir(FOLDER_e2e)
+LOG_FILE = os.path.join(FOLDER_e2e, "run.log")
 # define transforms
 # transforms = transforms.Compose([transforms.ToTensor()])  #
 # transforms = None
@@ -498,6 +499,23 @@ for j in range(0,5):
           bestaccu5=save_best(5, j, acc_lst5, bestaccu5, model5);
           bestaccu6=save_best(6, j, acc_lst6, bestaccu6, model6);
           bestaccu7=save_best(7, j, acc_lst7, bestaccu7, model7);
+          # append simple log line for this epoch
+          try:
+              with open(LOG_FILE, "a") as f_log:
+                  f_log.write(
+                      f"epoch={j}\t"
+                      f"time_elapsed={time.time() - t0:.2f}\t"
+                      f"m0_train={acc_lst0[0]:.2f}\tm0_val={acc_lst0[1]:.2f}\t"
+                      f"m1_train={acc_lst1[0]:.2f}\tm1_val={acc_lst1[1]:.2f}\t"
+                      f"m2_train={acc_lst2[0]:.2f}\tm2_val={acc_lst2[1]:.2f}\t"
+                      f"m3_train={acc_lst3[0]:.2f}\tm3_val={acc_lst3[1]:.2f}\t"
+                      f"m4_train={acc_lst4[0]:.2f}\tm4_val={acc_lst4[1]:.2f}\t"
+                      f"m5_train={acc_lst5[0]:.2f}\tm5_val={acc_lst5[1]:.2f}\t"
+                      f"m6_train={acc_lst6[0]:.2f}\tm6_val={acc_lst6[1]:.2f}\t"
+                      f"m7_train={acc_lst7[0]:.2f}\tm7_val={acc_lst7[1]:.2f}\n"
+                  )
+          except Exception as e:
+              print("log write failed:", e)
       #     # bestaccu8=save_best(8, j, acc_lst8, bestaccu8, model8);
       #     # bestaccu9=save_best(9, j, acc_lst9, bestaccu9, model9)
       #     # save_best(8, j, acc_lst8, bestaccu8, model8);

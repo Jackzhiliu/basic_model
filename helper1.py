@@ -6382,15 +6382,17 @@ def inc_train_2_layer_e2e_acce(model, i,j,x,y,ker,stri,pool_layer='max', epochs=
         # t0 = time.time()
         layer_in = model.forward_to_layer(x.float().to(DEVICE_[0]), indx)
         layer_tar = one_hot_embedding(y.long(), model.no_outputs).to(DEVICE_[0]).float()
-        # pad = curr_layer_front.padding
-        # print(pad)
-        # stride = curr_layer_front.stride
-        # print(stride)
-        w1, w2, alpha_vw, lr, e= inc_solve_2_layer_conv_fc_acce(j, i,layer_in, layer_tar,ker,stri,0,pool_layer=pool_layer,
-                                                         fil=w1, fc_wei=w2,
-                                                         fun_front=curr_layer_front.activations,
-                                                         fun_after=curr_layer_after.activations, loop=1,
-                                                         stride=1, pad=1, gain=gain_, auto=auto)
+        # 对 batch 维逐样本更新，保持逐样本收敛假设
+        for idx in range(layer_in.shape[0]):
+            li = layer_in[idx:idx+1]
+            lt = layer_tar[idx:idx+1]
+            w1, w2, alpha_vw, lr, e = inc_solve_2_layer_conv_fc_acce(
+                j, i, li, lt, ker, stri, 0, pool_layer=pool_layer,
+                fil=w1, fc_wei=w2,
+                fun_front=curr_layer_front.activations,
+                fun_after=curr_layer_after.activations, loop=1,
+                stride=1, pad=1, gain=gain_, auto=auto
+            )
         # if alpha_vw < alpha_vw_min:
         #     alpha_vw_min = alpha_vw
             # print('alpha_vm min at epoch', j + 1, ', batch', i + 1, ':', alpha_vw_min)
